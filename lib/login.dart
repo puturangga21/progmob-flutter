@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:penmas/components/button.dart';
 import 'package:penmas/components/card_login_social.dart';
 import 'package:penmas/components/textfield.dart';
@@ -17,7 +18,7 @@ class LoginPage extends StatelessWidget {
             child: Column(
               children: [
                 // Icon
-                Image.asset('assets/images/title.png'),
+                SvgPicture.asset('assets/icons/mini_icons.svg'),
 
                 const SizedBox(height: 36),
 
@@ -141,7 +142,7 @@ class LoginPage extends StatelessWidget {
                   children: [
                     // Card login untuk facebook
                     CardLoginSocial(
-                      logo: 'assets/icons/svg.svg',
+                      logo: 'assets/icons/facebook.svg',
                       title: 'Facebook',
                     ),
 

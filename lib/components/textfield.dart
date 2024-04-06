@@ -32,38 +32,44 @@ class MyTextField extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         // text field
-        TextField(
-          obscureText: hideText,
-          cursorColor: primary,
-          style: const TextStyle(
-            fontFamily: 'Poppins',
-          ),
-          decoration: InputDecoration(
-            hintText: hintText,
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                width: 1.6,
+        SizedBox(
+          height: 42,
+          child: TextField(
+            obscureText: hideText,
+            cursorColor: primary,
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+            ),
+            decoration: InputDecoration(
+              hintText: hintText,
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 1.6,
+                  color: neutral,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 1.6,
+                  color: primary,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              hintStyle: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 14,
                 color: neutral,
               ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                width: 1.6,
-                color: primary,
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            hintStyle: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 14,
-              color: neutral,
-            ),
-            prefixIconColor: neutral,
-            prefixIcon: Padding(
-              padding: const EdgeInsets.all(8),
-              child: SvgPicture.asset(
-                myIcons,
+              prefixIconColor: neutral,
+              prefixIcon: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                child: SvgPicture.asset(
+                  myIcons,
+                ),
               ),
             ),
           ),

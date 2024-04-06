@@ -1,30 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:penmas/components/bottom_navigation.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int index = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.heart_broken),
-            label: 'Favorite',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings),
-            label: 'Setting',
-          ),
-        ],
+    return const Scaffold(
+      bottomNavigationBar: BottomNavigation(),
+      body: Center(
+        child: Text('Halaman home'),
       ),
     );
   }

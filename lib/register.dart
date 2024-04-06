@@ -1,7 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:penmas/components/button.dart';
 import 'package:penmas/components/textfield.dart';
+import 'package:penmas/login.dart';
 import 'package:penmas/theme.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -99,6 +102,7 @@ class RegisterPage extends StatelessWidget {
                 MyButton(
                   title: 'Daftar Sekarang',
                   color: primary,
+                  onPressButton: () {},
                 ),
 
                 const SizedBox(height: 18),
@@ -114,10 +118,21 @@ class RegisterPage extends StatelessWidget {
                     ),
                     children: <TextSpan>[
                       TextSpan(
-                        text: 'Login',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, color: primary),
-                      ),
+                          text: 'Login',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, color: primary),
+
+                          // Fungsi untuk pindah halaman
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: const LoginPage(),
+                                  type: PageTransitionType.fade,
+                                ),
+                              );
+                            }),
                     ],
                   ),
                 )

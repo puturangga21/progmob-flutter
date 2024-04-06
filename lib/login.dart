@@ -1,8 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:penmas/components/button.dart';
 import 'package:penmas/components/card_login_social.dart';
 import 'package:penmas/components/textfield.dart';
+import 'package:penmas/register.dart';
 import 'package:penmas/theme.dart';
 
 class LoginPage extends StatelessWidget {
@@ -98,6 +101,7 @@ class LoginPage extends StatelessWidget {
                   MyButton(
                     color: primary,
                     title: 'Login',
+                    onPressButton: () {},
                   ),
 
                   // Atau login dengan
@@ -172,6 +176,18 @@ class LoginPage extends StatelessWidget {
                           text: 'Daftar',
                           style: TextStyle(
                               fontWeight: FontWeight.w600, color: primary),
+
+                          // Fungsi untuk pindah halaman
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: const RegisterPage(),
+                                  type: PageTransitionType.fade,
+                                ),
+                              );
+                            },
                         ),
                       ],
                     ),

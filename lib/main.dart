@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:penmas/login.dart';
-import 'package:penmas/register.dart';
-import 'package:penmas/home_page.dart';
+// import 'package:penmas/register.dart';
+// import 'package:penmas/home_page.dart';
 
 void main() {
   runApp(const MainApp());

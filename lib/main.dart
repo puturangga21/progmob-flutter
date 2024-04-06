@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:penmas/login.dart';
-// import 'package:penmas/register.dart';
+import 'package:penmas/register.dart';
 import 'package:penmas/home_page.dart';
 
 void main() {
@@ -13,10 +13,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Pemrograman Mobile',
+      theme: ThemeData(fontFamily: 'Poppins'),
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: const LoginPage(),
     );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:penmas/components/button.dart';
+import 'package:penmas/components/card_login_social.dart';
 import 'package:penmas/components/textfield.dart';
 import 'package:penmas/theme.dart';
 
@@ -20,8 +22,8 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 36),
 
                 // Heading
-                SizedBox(
-                  width: 230,
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 40),
                   child: Text(
                     'Sudah Daftar? Silahkan Login',
                     style: TextStyle(
@@ -55,6 +57,7 @@ class LoginPage extends StatelessWidget {
                       hintText: 'Username',
                       title: 'Username',
                       myIcons: 'assets/icons/user.svg',
+                      hideText: false,
                     ),
 
                     SizedBox(height: 20),
@@ -64,6 +67,7 @@ class LoginPage extends StatelessWidget {
                       hintText: 'Password',
                       title: 'Password',
                       myIcons: 'assets/icons/key.svg',
+                      hideText: true,
                     ),
                   ],
                 ),
@@ -89,37 +93,25 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 15),
 
                 // Tombol
-                Container(
-                  width: double.infinity,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: primary,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                MyButton(
+                  color: primary,
+                  title: 'Login',
                 ),
 
                 // Atau login dengan
-
                 const SizedBox(height: 50),
 
                 Row(
                   children: [
+                    // Garis hiasan
                     Expanded(
                       child: Divider(
                         thickness: 0.5,
                         color: neutral,
                       ),
                     ),
+
+                    // Teks
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       child: Text(
@@ -132,6 +124,8 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                     ),
+
+                    // Garis hiasan
                     Expanded(
                       child: Divider(
                         thickness: 0.5,
@@ -143,70 +137,42 @@ class LoginPage extends StatelessWidget {
 
                 const SizedBox(height: 40),
 
-                Row(
+                const Row(
                   children: [
-                    Flexible(
-                      fit: FlexFit.tight,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0XFFF8FAFC),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: Image.asset('assets/images/facebook.png'),
-                            ),
-                            Text(
-                              'Facebook',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: secondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    // Card login untuk facebook
+                    CardLoginSocial(
+                      logo: 'assets/icons/svg.svg',
+                      title: 'Facebook',
                     ),
-                    const SizedBox(width: 15),
-                    Flexible(
-                      fit: FlexFit.tight,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0XFFF8FAFC),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: Image.asset('assets/images/google.png'),
-                            ),
-                            Text(
-                              'Google',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: secondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+
+                    SizedBox(width: 15),
+
+                    // Card login untuk google
+                    CardLoginSocial(
+                      logo: 'assets/icons/google.svg',
+                      title: 'Google',
                     ),
                   ],
+                ),
+
+                const SizedBox(height: 110),
+
+                RichText(
+                  text: TextSpan(
+                    text: 'Belum punya akun? ',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 14,
+                      color: secondary,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: 'Daftar',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, color: primary),
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),

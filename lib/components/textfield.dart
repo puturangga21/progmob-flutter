@@ -6,12 +6,14 @@ class MyTextField extends StatelessWidget {
   final String hintText;
   final String title;
   final String myIcons;
+  final bool hideText;
 
   const MyTextField({
     super.key,
     required this.hintText,
     required this.title,
     required this.myIcons,
+    required this.hideText,
   });
 
   @override
@@ -31,6 +33,8 @@ class MyTextField extends StatelessWidget {
         const SizedBox(height: 4),
         // text field
         TextField(
+          obscureText: hideText,
+          cursorColor: primary,
           style: const TextStyle(
             fontFamily: 'Poppins',
           ),
@@ -46,7 +50,7 @@ class MyTextField extends StatelessWidget {
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 width: 1.6,
-                color: neutral,
+                color: primary,
               ),
               borderRadius: BorderRadius.circular(12),
             ),

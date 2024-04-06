@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:penmas/login.dart';
+import 'package:penmas/register.dart';
 
 void main() {
   runApp(const MainApp());
@@ -11,9 +12,9 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      title: 'Pengaduan Masyarakat',
+      title: 'Pemrograman Mobile',
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: RegisterPage(),
     );
   }
 }

@@ -1,14 +1,29 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:penmas/components/button.dart';
 import 'package:penmas/components/textfield.dart';
 import 'package:penmas/pages/login.dart';
 import 'package:penmas/theme.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final dio = Dio();
+  final myStorage = GetStorage();
+  final apiUrl = 'https://mobileapis.manpits.xyz/api';
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,17 +69,18 @@ class RegisterPage extends StatelessWidget {
                 const SizedBox(height: 50),
 
                 // Form pendaftaran
-                const Column(
+                Column(
                   children: [
                     // Username
                     MyTextField(
-                      hintText: 'Username',
-                      title: 'Username',
+                      hintText: 'Full Name',
+                      title: 'Full Name',
                       myIcons: 'assets/icons/user.svg',
                       hideText: false,
+                      myController: nameController,
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // Email
                     MyTextField(
@@ -72,9 +88,10 @@ class RegisterPage extends StatelessWidget {
                       title: 'Email',
                       myIcons: 'assets/icons/mail.svg',
                       hideText: false,
+                      myController: emailController,
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // Password
                     MyTextField(
@@ -82,17 +99,10 @@ class RegisterPage extends StatelessWidget {
                       title: 'Password',
                       myIcons: 'assets/icons/key.svg',
                       hideText: true,
+                      myController: passwordController,
                     ),
 
-                    SizedBox(height: 20),
-
-                    // Telepon
-                    MyTextField(
-                      hintText: 'Telepon',
-                      title: 'Telepon',
-                      myIcons: 'assets/icons/flag_id.svg',
-                      hideText: false,
-                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
 
@@ -100,10 +110,19 @@ class RegisterPage extends StatelessWidget {
 
                 // Button daftar
                 MyButton(
-                  title: 'Daftar Sekarang',
-                  color: primary,
-                  onPressButton: () {},
-                ),
+                    title: 'Daftar Sekarang',
+                    color: primary,
+                    onPressButton: () {
+                      goRegister(
+                        context,
+                        dio,
+                        apiUrl,
+                        myStorage,
+                        nameController,
+                        emailController,
+                        passwordController,
+                      );
+                    }),
 
                 const SizedBox(height: 18),
 
@@ -142,5 +161,33 @@ class RegisterPage extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+void goRegister(BuildContext context, dio, apiUrl, myStorage, nameController,
+    emailController, passwordController) async {
+  try {
+    final response = await dio.post(
+      '$apiUrl/register',
+      data: {
+        'name': nameController.text,
+        'email': emailController.text,
+        'password': passwordController.text,
+      },
+    );
+    print(response.data);
+
+    // Pindah halaman ke home jika berhasil register
+    Navigator.push(
+      context,
+      PageTransition(
+        child: const LoginPage(),
+        type: PageTransitionType.fade,
+      ),
+    );
+
+    // Jika gagal
+  } on DioException catch (e) {
+    print('${e.response} - ${e.response?.statusCode}');
   }
 }

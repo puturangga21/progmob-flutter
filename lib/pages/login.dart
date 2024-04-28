@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:penmas/components/button.dart';
 import 'package:penmas/components/card_login_social.dart';
@@ -18,6 +19,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final dio = Dio();
+  final myStorage = GetStorage();
+  final apiUrl = 'https://mobileapis.manpits.xyz/api';
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -111,11 +116,18 @@ class _LoginPageState extends State<LoginPage> {
 
                   // Tombol
                   MyButton(
-                    color: primary,
-                    title: 'Login',
-                    onPressButton: () =>
-                        login(context, emailController, passwordController),
-                  ),
+                      color: primary,
+                      title: 'Login',
+                      onPressButton: () {
+                        goLogin(
+                          context,
+                          emailController,
+                          passwordController,
+                          dio,
+                          myStorage,
+                          apiUrl,
+                        );
+                      }),
 
                   // Atau login dengan
                   const SizedBox(height: 50),
@@ -213,20 +225,30 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-void login(BuildContext context, emailController, passwordController) async {
-  final dio = Dio();
+void goLogin(BuildContext context, emailController, passwordController, dio,
+    myStorage, apiUrl) async {
   try {
-    final response = await dio.post('https://mobileapis.manpits.xyz/api/login',
-        data: {
-          'email': emailController.text,
-          'password': passwordController.text
-        });
-    print(response.data);
-    Navigator.push(
-      // ignore: use_build_context_synchronously
-      context,
-      PageTransition(child: const HomePage(), type: PageTransitionType.fade),
+    final response = await dio.post(
+      '$apiUrl/login',
+      data: {
+        'email': emailController.text,
+        'password': passwordController.text,
+      },
     );
+
+    print(response.data);
+    myStorage.write('token', response.data['data']['token']);
+
+    // Pindah halaman ke home jika berhasil login
+    Navigator.push(
+      context,
+      PageTransition(
+        child: const HomePage(),
+        type: PageTransitionType.fade,
+      ),
+    );
+
+    // Jika error
   } on DioException catch (e) {
     print('Error : ${e.response?.statusCode} - ${e.response?.data}');
   }

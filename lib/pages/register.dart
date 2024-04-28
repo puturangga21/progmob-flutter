@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:penmas/components/button.dart';
 import 'package:penmas/components/textfield.dart';
-import 'package:penmas/login.dart';
+import 'package:penmas/pages/login.dart';
 import 'package:penmas/theme.dart';
 
 class RegisterPage extends StatelessWidget {

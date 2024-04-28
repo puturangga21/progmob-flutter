@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -5,11 +6,20 @@ import 'package:page_transition/page_transition.dart';
 import 'package:penmas/components/button.dart';
 import 'package:penmas/components/card_login_social.dart';
 import 'package:penmas/components/textfield.dart';
-import 'package:penmas/register.dart';
+import 'package:penmas/pages/home_page.dart';
+import 'package:penmas/pages/register.dart';
 import 'package:penmas/theme.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -55,17 +65,18 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(height: 50),
 
                   // Form
-                  const Column(
+                  Column(
                     children: [
                       // Username
                       MyTextField(
-                        hintText: 'Username',
-                        title: 'Username',
+                        hintText: 'Email',
+                        title: 'Email',
                         myIcons: 'assets/icons/user.svg',
                         hideText: false,
+                        myController: emailController,
                       ),
 
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       // Password
                       MyTextField(
@@ -73,6 +84,7 @@ class LoginPage extends StatelessWidget {
                         title: 'Password',
                         myIcons: 'assets/icons/key.svg',
                         hideText: true,
+                        myController: passwordController,
                       ),
                     ],
                   ),
@@ -101,7 +113,8 @@ class LoginPage extends StatelessWidget {
                   MyButton(
                     color: primary,
                     title: 'Login',
-                    onPressButton: () {},
+                    onPressButton: () =>
+                        login(context, emailController, passwordController),
                   ),
 
                   // Atau login dengan
@@ -197,5 +210,24 @@ class LoginPage extends StatelessWidget {
             ),
           ),
         ));
+  }
+}
+
+void login(BuildContext context, emailController, passwordController) async {
+  final dio = Dio();
+  try {
+    final response = await dio.post('https://mobileapis.manpits.xyz/api/login',
+        data: {
+          'email': emailController.text,
+          'password': passwordController.text
+        });
+    print(response.data);
+    Navigator.push(
+      // ignore: use_build_context_synchronously
+      context,
+      PageTransition(child: const HomePage(), type: PageTransitionType.fade),
+    );
+  } on DioException catch (e) {
+    print('Error : ${e.response?.statusCode} - ${e.response?.data}');
   }
 }

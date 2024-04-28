@@ -7,6 +7,7 @@ class MyTextField extends StatelessWidget {
   final String title;
   final String myIcons;
   final bool hideText;
+  final TextEditingController? myController;
 
   const MyTextField({
     super.key,
@@ -14,6 +15,7 @@ class MyTextField extends StatelessWidget {
     required this.title,
     required this.myIcons,
     required this.hideText,
+    this.myController,
   });
 
   @override
@@ -35,6 +37,7 @@ class MyTextField extends StatelessWidget {
         SizedBox(
           height: 42,
           child: TextField(
+            controller: myController,
             obscureText: hideText,
             cursorColor: primary,
             style: const TextStyle(

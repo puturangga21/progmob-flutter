@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:penmas/login.dart';
-// import 'package:penmas/register.dart';
-// import 'package:penmas/home_page.dart';
+import 'package:penmas/pages/home_page.dart';
+import 'package:penmas/pages/login.dart';
+import 'package:penmas/pages/register.dart';
 
 void main() {
   runApp(const MainApp());
@@ -17,7 +17,12 @@ class MainApp extends StatelessWidget {
       title: 'Pemrograman Mobile',
       theme: ThemeData(fontFamily: 'Poppins'),
       debugShowCheckedModeBanner: false,
-      home: const LoginPage(),
+      routes: {
+        '/': (context) => const HomePage(),
+        '/login': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
+      },
+      initialRoute: '/login',
     );
   }
 }

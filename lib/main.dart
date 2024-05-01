@@ -24,7 +24,7 @@ class MainApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
       },
-      initialRoute: '/',
+      initialRoute: '/login',
     );
   }
 }

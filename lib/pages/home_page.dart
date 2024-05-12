@@ -21,6 +21,29 @@ class _HomePageState extends State<HomePage> {
   final apiUrl = 'https://mobileapis.manpits.xyz/api';
 
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      checkLoginStatus();
+    });
+  }
+
+  void checkLoginStatus() {
+    final token = myStorage.read('token');
+    if (token == null) {
+      // Jika pengguna sudah login, arahkan ke halaman login page
+      Navigator.push(
+        context,
+        PageTransition(
+          child: LoginPage(),
+          type: PageTransitionType.fade,
+        ),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: const BottomNavigation(),

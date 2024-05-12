@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:page_transition/page_transition.dart';
@@ -25,6 +26,29 @@ class _LoginPageState extends State<LoginPage> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      checkLoginStatus();
+    });
+  }
+
+  void checkLoginStatus() {
+    final token = myStorage.read('token');
+    if (token != null) {
+      // Jika pengguna sudah login, arahkan ke halaman login page
+      Navigator.push(
+        context,
+        PageTransition(
+          child: HomePage(),
+          type: PageTransitionType.fade,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

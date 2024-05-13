@@ -4,6 +4,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:penmas/components/bottom_navigation.dart';
 import 'package:penmas/components/button.dart';
+import 'package:penmas/pages/list_user.dart';
+import 'package:penmas/pages/add_user.dart';
 import 'package:penmas/pages/login.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,21 +27,63 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      checkLoginStatus();
+      checkTokenValidity();
     });
   }
 
-  void checkLoginStatus() {
+  // void checkLoginStatus() {
+  //   final token = myStorage.read('token');
+  //   if (token == null) {
+  //     // Jika pengguna sudah login, arahkan ke halaman login page
+  //     Navigator.push(
+  //       context,
+  //       PageTransition(
+  //         child: LoginPage(),
+  //         type: PageTransitionType.fade,
+  //       ),
+  //     );
+  //   }
+  // }
+
+  void checkTokenValidity() async {
     final token = myStorage.read('token');
     if (token == null) {
-      // Jika pengguna sudah login, arahkan ke halaman login page
+      // Jika token tidak tersedia, arahkan kembali ke halaman login
       Navigator.push(
         context,
         PageTransition(
-          child: LoginPage(),
+          child: const LoginPage(),
           type: PageTransitionType.fade,
         ),
       );
+    } else {
+      // Jika token tersedia, lakukan pemeriksaan ke server apakah token masih valid
+      try {
+        final response = await dio.get(
+          '$apiUrl/validateToken',
+          options: Options(
+            headers: {'Authorization': 'Bearer $token'},
+          ),
+        );
+        // Jika token valid, tidak perlu tindakan tambahan
+      } on DioException catch (e) {
+        // Jika terjadi error saat validasi token (termasuk token expired),
+        // arahkan kembali ke halaman login
+        if (e.response?.statusCode == 401) {
+          myStorage.remove('token');
+
+          Navigator.push(
+            context,
+            PageTransition(
+              child: const LoginPage(),
+              type: PageTransitionType.fade,
+            ),
+          );
+        } else {
+          // Tangani jenis error lain jika diperlukan
+          print('Error: ${e.response?.statusCode} - ${e.response?.data}');
+        }
+      }
     }
   }
 
@@ -57,6 +101,38 @@ class _HomePageState extends State<HomePage> {
               color: Colors.blue,
               onPressButton: () {
                 goUser(dio, myStorage, apiUrl);
+              },
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            MyButton(
+              title: 'Tambah User',
+              color: Colors.green,
+              onPressButton: () {
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: AddUser(),
+                    type: PageTransitionType.fade,
+                  ),
+                );
+              },
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            MyButton(
+              title: 'Lihat Daftar User',
+              color: Colors.orange,
+              onPressButton: () {
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: ListUser(),
+                    type: PageTransitionType.fade,
+                  ),
+                );
               },
             ),
             const SizedBox(

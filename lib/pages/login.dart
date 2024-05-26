@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:page_transition/page_transition.dart';
@@ -262,6 +261,7 @@ void goLogin(BuildContext context, emailController, passwordController, dio,
 
     print(response.data);
     myStorage.write('token', response.data['data']['token']);
+    myStorage.write('user', response.data['data']['user']);
 
     // Pindah halaman ke home jika berhasil login
     Navigator.push(

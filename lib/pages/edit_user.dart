@@ -2,20 +2,18 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:penmas/components/button.dart';
 import 'package:penmas/components/textfield.dart';
-import 'package:penmas/pages/home_page.dart';
 import 'package:penmas/theme.dart';
 
-class AddUser extends StatefulWidget {
-  const AddUser({super.key});
+class EditUser extends StatefulWidget {
+  const EditUser({super.key});
 
   @override
-  State<AddUser> createState() => _AddUserState();
+  State<EditUser> createState() => _EditUserState();
 }
 
-class _AddUserState extends State<AddUser> {
+class _EditUserState extends State<EditUser> {
   final dio = Dio();
   final myStorage = GetStorage();
   final apiUrl = 'https://mobileapis.manpits.xyz/api';
@@ -42,7 +40,7 @@ class _AddUserState extends State<AddUser> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 48),
               child: Text(
-                'Silahkan menambah data user',
+                'Silahkan mengedit data user',
                 style: TextStyle(
                   fontSize: 30,
                   fontFamily: 'Poppins',
@@ -108,65 +106,14 @@ class _AddUserState extends State<AddUser> {
 
                 // Button
                 MyButton(
-                    title: 'Tambah User',
+                    title: 'Edit User',
                     color: Colors.green,
-                    onPressButton: () {
-                      addUser(
-                        context,
-                        dio,
-                        myStorage,
-                        apiUrl,
-                        noIndukController,
-                        namaController,
-                        alamatController,
-                        tglLahirController,
-                        teleponController,
-                      );
-                    })
+                    onPressButton: () {})
               ],
             )
           ],
         ),
       ),
     );
-  }
-}
-
-void addUser(
-    BuildContext context,
-    dio,
-    myStorage,
-    apiUrl,
-    noIndukController,
-    namaController,
-    alamatController,
-    tglLahirController,
-    teleponController) async {
-  try {
-    final response = await dio.post(
-      '$apiUrl/anggota',
-      options: Options(
-        headers: {'Authorization': 'Bearer ${myStorage.read('token')}'},
-      ),
-      data: {
-        'nomor_induk': noIndukController.text,
-        'nama': namaController.text,
-        'alamat': alamatController.text,
-        'tgl_lahir': tglLahirController.text,
-        'telepon': teleponController.text,
-      },
-    );
-    print(response.data);
-
-    // Pindah halaman ke home jika berhasil register
-    Navigator.push(
-      context,
-      PageTransition(
-        child: HomePage(),
-        type: PageTransitionType.fade,
-      ),
-    );
-  } on DioException catch (e) {
-    print('${e.response} - ${e.response?.statusCode}');
   }
 }

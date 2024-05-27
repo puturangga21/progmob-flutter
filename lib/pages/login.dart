@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.push(
         context,
         PageTransition(
-          child: HomePage(),
+          child: const HomePage(),
           type: PageTransitionType.fade,
         ),
       );

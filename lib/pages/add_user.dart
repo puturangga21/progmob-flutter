@@ -162,7 +162,7 @@ void addUser(
     Navigator.push(
       context,
       PageTransition(
-        child: HomePage(),
+        child: const HomePage(),
         type: PageTransitionType.fade,
       ),
     );

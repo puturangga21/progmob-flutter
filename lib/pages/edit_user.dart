@@ -64,7 +64,7 @@ class _EditUserState extends State<EditUser> {
       Navigator.push(
         context,
         PageTransition(
-          child: ListUser(),
+          child: const ListUser(),
           type: PageTransitionType.fade,
         ),
       );

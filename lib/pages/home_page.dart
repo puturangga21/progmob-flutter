@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   PageTransition(
-                    child: AddUser(),
+                    child: const AddUser(),
                     type: PageTransitionType.fade,
                   ),
                 );
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   PageTransition(
-                    child: ListUser(),
+                    child: const ListUser(),
                     type: PageTransitionType.fade,
                   ),
                 );

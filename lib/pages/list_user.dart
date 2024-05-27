@@ -6,7 +6,7 @@ import 'package:penmas/pages/edit_user.dart';
 import 'package:penmas/theme.dart';
 
 class ListUser extends StatefulWidget {
-  ListUser({super.key});
+  const ListUser({super.key});
 
   @override
   State<ListUser> createState() => _ListUserState();

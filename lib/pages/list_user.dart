@@ -44,14 +44,18 @@ class _ListUserState extends State<ListUser> {
     }
   }
 
-  void editUser() {
+  void editUser(Map<String, dynamic> user) {
     Navigator.push(
       context,
       PageTransition(
-        child: EditUser(),
+        child: EditUser(user: user),
         type: PageTransitionType.fade,
       ),
-    );
+    ).then((value) {
+      if (value == true) {
+        getUser();
+      }
+    });
   }
 
   void deleteUser(int id) async {
@@ -94,7 +98,7 @@ class _ListUserState extends State<ListUser> {
                         children: [
                           IconButton(
                             onPressed: () {
-                              editUser();
+                              editUser(user);
                             },
                             icon: Icon(
                               Icons.edit,

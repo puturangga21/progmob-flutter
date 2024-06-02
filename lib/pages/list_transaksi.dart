@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:penmas/api_service.dart';
 import 'package:penmas/pages/add_transaksi.dart';
+import 'package:penmas/pages/saldo_user.dart';
 import 'package:penmas/theme.dart';
 
 class ListTransaksi extends StatefulWidget {
@@ -49,6 +50,16 @@ class _ListTransaksiState extends State<ListTransaksi> {
     });
   }
 
+  void saldoUser(Map<String, dynamic> user) {
+    Navigator.push(
+      context,
+      PageTransition(
+        child: SaldoUser(user: user),
+        type: PageTransitionType.fade,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +93,7 @@ class _ListTransaksiState extends State<ListTransaksi> {
                           ),
                           IconButton(
                             onPressed: () {
-                              // deleteUser(user['id']);
+                              saldoUser(user);
                             },
                             icon: Icon(
                               Icons.money,

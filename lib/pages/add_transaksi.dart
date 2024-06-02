@@ -4,7 +4,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:penmas/api_service.dart';
 import 'package:penmas/components/button.dart';
 import 'package:penmas/components/textfield.dart';
-import 'package:penmas/pages/list_transaksi.dart';
+import 'package:penmas/pages/saldo_user.dart';
 import 'package:penmas/theme.dart';
 
 class AddTransaksi extends StatefulWidget {
@@ -22,15 +22,17 @@ class AddTransaksi extends StatefulWidget {
 class _AddTransaksiState extends State<AddTransaksi> {
   final ApiService apiService = ApiService();
   TextEditingController idAnggotaController = TextEditingController();
-  TextEditingController trxIdController = TextEditingController();
   TextEditingController trxNominalController = TextEditingController();
+  // TextEditingController trxIdController = TextEditingController();
+  int? selectedTrxId;
 
   @override
   void initState() {
     super.initState();
     idAnggotaController =
         TextEditingController(text: widget.user['id'].toString());
-    trxIdController = TextEditingController(text: '1');
+    // trxIdController = TextEditingController(text: '1');
+    selectedTrxId = 1;
   }
 
   void addTransaction() async {
@@ -39,7 +41,7 @@ class _AddTransaksiState extends State<AddTransaksi> {
       method: 'POST',
       data: {
         'anggota_id': idAnggotaController.text,
-        'trx_id': trxIdController.text,
+        'trx_id': selectedTrxId.toString(),
         'trx_nominal': trxNominalController.text,
       },
     );
@@ -50,7 +52,7 @@ class _AddTransaksiState extends State<AddTransaksi> {
       Navigator.push(
         context,
         PageTransition(
-          child: const ListTransaksi(),
+          child: SaldoUser(user: widget.user),
           type: PageTransitionType.fade,
         ),
       );
@@ -95,6 +97,7 @@ class _AddTransaksiState extends State<AddTransaksi> {
             const SizedBox(height: 50),
 
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 MyTextField(
                   hintText: 'ID Anggota',
@@ -104,14 +107,7 @@ class _AddTransaksiState extends State<AddTransaksi> {
                   myController: idAnggotaController,
                 ),
                 const SizedBox(height: 20),
-                MyTextField(
-                  hintText: 'TRX ID',
-                  title: 'TRX ID',
-                  myIcons: 'assets/icons/user.svg',
-                  hideText: false,
-                  myController: trxIdController,
-                ),
-                const SizedBox(height: 20),
+
                 MyTextField(
                   hintText: 'TRX Nominal',
                   title: 'TRX Nominal',
@@ -119,6 +115,69 @@ class _AddTransaksiState extends State<AddTransaksi> {
                   hideText: false,
                   myController: trxNominalController,
                 ),
+                const SizedBox(height: 20),
+
+                // Dropdown untuk TRX ID
+                Text(
+                  'Jenis Transaksi',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w600,
+                    color: secondary,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                DropdownButtonFormField<int>(
+                  value: selectedTrxId,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 1.6,
+                        color: neutral,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 1.6,
+                        color: primary,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    hintStyle: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 14,
+                      color: neutral,
+                    ),
+                    prefixIconColor: neutral,
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      child: SvgPicture.asset(
+                        'assets/icons/user.svg',
+                      ),
+                    ),
+                  ),
+                  items: const [
+                    DropdownMenuItem<int>(
+                      value: 1,
+                      child: Text('Setoran Awal'),
+                    ),
+                    DropdownMenuItem<int>(
+                      value: 2,
+                      child: Text('Tambah Saldo'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      selectedTrxId = value!;
+                    });
+                  },
+                ),
+
                 const SizedBox(height: 20),
 
                 // Button

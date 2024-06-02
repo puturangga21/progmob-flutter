@@ -1,9 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:penmas/api_service.dart';
 import 'package:penmas/components/button.dart';
 import 'package:penmas/components/textfield.dart';
 import 'package:penmas/pages/login.dart';
@@ -17,13 +16,36 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final dio = Dio();
-  final myStorage = GetStorage();
-  final apiUrl = 'https://mobileapis.manpits.xyz/api';
+  ApiService apiService = ApiService();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  void goRegister() async {
+    final response = await apiService.request(
+      endpoint: 'register',
+      method: 'POST',
+      data: {
+        'name': nameController.text,
+        'email': emailController.text,
+        'password': passwordController.text,
+      },
+    );
+
+    if (response != null) {
+      print(response.data);
+
+      // Pindah halaman ke home jika berhasil register
+      Navigator.push(
+        context,
+        PageTransition(
+          child: const LoginPage(),
+          type: PageTransitionType.fade,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,15 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     title: 'Daftar Sekarang',
                     color: primary,
                     onPressButton: () {
-                      goRegister(
-                        context,
-                        dio,
-                        apiUrl,
-                        myStorage,
-                        nameController,
-                        emailController,
-                        passwordController,
-                      );
+                      goRegister();
                     }),
 
                 const SizedBox(height: 18),
@@ -161,33 +175,5 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
-  }
-}
-
-void goRegister(BuildContext context, dio, apiUrl, myStorage, nameController,
-    emailController, passwordController) async {
-  try {
-    final response = await dio.post(
-      '$apiUrl/register',
-      data: {
-        'name': nameController.text,
-        'email': emailController.text,
-        'password': passwordController.text,
-      },
-    );
-    print(response.data);
-
-    // Pindah halaman ke home jika berhasil register
-    Navigator.push(
-      context,
-      PageTransition(
-        child: const LoginPage(),
-        type: PageTransitionType.fade,
-      ),
-    );
-
-    // Jika gagal
-  } on DioException catch (e) {
-    print('${e.response} - ${e.response?.statusCode}');
   }
 }

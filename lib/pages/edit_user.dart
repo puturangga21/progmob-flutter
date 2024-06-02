@@ -1,8 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:penmas/api_service.dart';
 import 'package:penmas/components/button.dart';
 import 'package:penmas/components/textfield.dart';
 import 'package:penmas/pages/list_user.dart';
@@ -21,9 +20,7 @@ class EditUser extends StatefulWidget {
 }
 
 class _EditUserState extends State<EditUser> {
-  final dio = Dio();
-  final myStorage = GetStorage();
-  final apiUrl = 'https://mobileapis.manpits.xyz/api';
+  ApiService apiService = ApiService();
 
   late TextEditingController noIndukController;
   late TextEditingController namaController;
@@ -43,21 +40,19 @@ class _EditUserState extends State<EditUser> {
   }
 
   void updateUser() async {
-    try {
-      final response = await dio.put(
-        '$apiUrl/anggota/${widget.user['id']}',
-        options: Options(
-          headers: {'Authorization': 'Bearer ${myStorage.read('token')}'},
-        ),
-        data: {
-          'nomor_induk': noIndukController.text,
-          'nama': namaController.text,
-          'alamat': alamatController.text,
-          'tgl_lahir': tglLahirController.text,
-          'telepon': teleponController.text,
-        },
-      );
+    final response = await apiService.request(
+      endpoint: 'anggota/${widget.user['id']}',
+      method: 'PUT',
+      data: {
+        'nomor_induk': noIndukController.text,
+        'nama': namaController.text,
+        'alamat': alamatController.text,
+        'tgl_lahir': tglLahirController.text,
+        'telepon': teleponController.text,
+      },
+    );
 
+    if (response != null) {
       print(response.data);
 
       // Kembali ke halaman ListUser setelah berhasil mengupdate data
@@ -68,8 +63,6 @@ class _EditUserState extends State<EditUser> {
           type: PageTransitionType.fade,
         ),
       );
-    } on DioException catch (e) {
-      print('${e.response} - ${e.response?.statusCode}');
     }
   }
 

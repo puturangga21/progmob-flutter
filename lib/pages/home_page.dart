@@ -1,12 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:penmas/components/bottom_navigation.dart';
-import 'package:penmas/components/card_banner.dart';
-import 'package:penmas/pages/list_user.dart';
-import 'package:penmas/pages/add_user.dart';
-import 'package:penmas/pages/login.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:penmas/screens/dashboard.dart';
+import 'package:penmas/screens/setting.dart';
+import 'package:penmas/screens/transaction.dart';
 import 'package:penmas/theme.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,162 +15,49 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int index = 0;
 
-  final dio = Dio();
-  final myStorage = GetStorage();
-  final apiUrl = 'https://mobileapis.manpits.xyz/api';
-
-  String userName = '';
-
-  @override
-  void initState() {
-    super.initState();
-    loadUserData();
-  }
-
-  void loadUserData() {
-    final user = myStorage.read('user');
-    if (user != null) {
-      setState(() {
-        userName = user['name'];
-      });
-    }
-  }
+  final screens = [
+    MyDashboard(),
+    MyTransaction(),
+    MySetting(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BottomNavigation(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 33),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Teks heading
-            Container(
-              margin: const EdgeInsets.only(top: 60),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Hi $userName!',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w600,
-                      color: secondary,
-                    ),
-                  ),
-                  Text(
-                    'Selamat datang di dashboard',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: secondary,
-                    ),
-                  ),
-                ],
-              ),
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          backgroundColor: Colors.white,
+          indicatorColor: primal,
+          labelTextStyle: MaterialStateProperty.all(
+            const TextStyle(
+              fontSize: 14,
+              fontFamily: 'Poppins',
             ),
-
-            const SizedBox(
-              height: 24,
+          ),
+        ),
+        child: NavigationBar(
+          backgroundColor: Colors.white,
+          selectedIndex: index,
+          onDestinationSelected: (index) => setState(() {
+            this.index = index;
+          }),
+          destinations: [
+            NavigationDestination(
+              icon: SvgPicture.asset('assets/icons/home.svg'),
+              label: 'Home',
             ),
-
-            CardBanner(
-              title: 'Cek User',
-              image: 'assets/images/card1.png',
-              onPressButton: () {
-                goUser(dio, myStorage, apiUrl);
-              },
+            NavigationDestination(
+              icon: SvgPicture.asset('assets/icons/heart.svg'),
+              label: 'Transaction',
             ),
-
-            const SizedBox(
-              height: 16,
-            ),
-
-            CardBanner(
-              title: 'Tambah User',
-              image: 'assets/images/card2.png',
-              onPressButton: () {
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: const AddUser(),
-                    type: PageTransitionType.fade,
-                  ),
-                );
-              },
-            ),
-
-            const SizedBox(
-              height: 16,
-            ),
-
-            CardBanner(
-              title: 'Daftar User',
-              image: 'assets/images/card3.png',
-              onPressButton: () {
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    child: const ListUser(),
-                    type: PageTransitionType.fade,
-                  ),
-                );
-              },
-            ),
-
-            const SizedBox(
-              height: 16,
-            ),
-
-            CardBanner(
-              title: 'Logout',
-              image: 'assets/images/card4.png',
-              onPressButton: () {
-                goLogout(context, dio, myStorage, apiUrl);
-              },
+            NavigationDestination(
+              icon: SvgPicture.asset('assets/icons/cog.svg'),
+              label: 'Setting',
             ),
           ],
         ),
       ),
+      body: screens[index],
     );
-  }
-}
-
-void goUser(dio, myStorage, apiUrl) async {
-  try {
-    final response = await dio.get(
-      '$apiUrl/user',
-      options: Options(
-        headers: {'Authorization': 'Bearer ${myStorage.read('token')}'},
-      ),
-    );
-    print(response.data);
-  } on DioException catch (e) {
-    print('${e.response} - ${e.response?.statusCode}');
-  }
-}
-
-void goLogout(BuildContext context, dio, myStorage, apiUrl) async {
-  try {
-    final response = await dio.get(
-      '$apiUrl/logout',
-      options: Options(
-        headers: {'Authorization': 'Bearer ${myStorage.read('token')}'},
-      ),
-    );
-    print(response.data);
-
-    // Hapus token dari penyimpanan
-    myStorage.remove('token');
-    myStorage.remove('user');
-
-    // Balik ke halaman login
-    Navigator.push(
-      context,
-      PageTransition(child: const LoginPage(), type: PageTransitionType.fade),
-    );
-  } on DioException catch (e) {
-    print('${e.response} - ${e.response?.statusCode}');
   }
 }

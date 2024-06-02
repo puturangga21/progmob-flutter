@@ -1,9 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:penmas/api_service.dart';
 import 'package:penmas/components/button.dart';
 import 'package:penmas/components/card_login_social.dart';
 import 'package:penmas/components/textfield.dart';
@@ -19,10 +19,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final dio = Dio();
   final myStorage = GetStorage();
-  final apiUrl = 'https://mobileapis.manpits.xyz/api';
 
+  ApiService apiService = ApiService();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -39,6 +38,32 @@ class _LoginPageState extends State<LoginPage> {
     final token = myStorage.read('token');
     if (token != null) {
       // Jika pengguna sudah login, arahkan ke halaman login page
+      Navigator.push(
+        context,
+        PageTransition(
+          child: const HomePage(),
+          type: PageTransitionType.fade,
+        ),
+      );
+    }
+  }
+
+  void goLogin() async {
+    final response = await apiService.request(
+      endpoint: 'login',
+      method: 'POST',
+      data: {
+        'email': emailController.text,
+        'password': passwordController.text,
+      },
+    );
+
+    if (response != null) {
+      print(response.data);
+      myStorage.write('token', response.data['data']['token']);
+      myStorage.write('user', response.data['data']['user']);
+
+      // Pindah halaman ke home jika berhasil login
       Navigator.push(
         context,
         PageTransition(
@@ -142,14 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                       color: primary,
                       title: 'Login',
                       onPressButton: () {
-                        goLogin(
-                          context,
-                          emailController,
-                          passwordController,
-                          dio,
-                          myStorage,
-                          apiUrl,
-                        );
+                        goLogin();
                       }),
 
                   // Atau login dengan
@@ -245,35 +263,5 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ));
-  }
-}
-
-void goLogin(BuildContext context, emailController, passwordController, dio,
-    myStorage, apiUrl) async {
-  try {
-    final response = await dio.post(
-      '$apiUrl/login',
-      data: {
-        'email': emailController.text,
-        'password': passwordController.text,
-      },
-    );
-
-    print(response.data);
-    myStorage.write('token', response.data['data']['token']);
-    myStorage.write('user', response.data['data']['user']);
-
-    // Pindah halaman ke home jika berhasil login
-    Navigator.push(
-      context,
-      PageTransition(
-        child: const HomePage(),
-        type: PageTransitionType.fade,
-      ),
-    );
-
-    // Jika error
-  } on DioException catch (e) {
-    print('Error : ${e.response?.statusCode} - ${e.response?.data}');
   }
 }

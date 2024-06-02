@@ -1,34 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:penmas/api_service.dart';
-import 'package:penmas/pages/edit_user.dart';
+import 'package:penmas/pages/add_transaksi.dart';
 import 'package:penmas/theme.dart';
 
-class ListUser extends StatefulWidget {
-  const ListUser({super.key});
+class ListTransaksi extends StatefulWidget {
+  const ListTransaksi({super.key});
 
   @override
-  State<ListUser> createState() => _ListUserState();
+  State<ListTransaksi> createState() => _ListTransaksiState();
 }
 
-class _ListUserState extends State<ListUser> {
+class _ListTransaksiState extends State<ListTransaksi> {
   // Buat variabel untuk simpan data anggota yang diambil dari API
   List<dynamic> users = [];
-  final ApiService apiService = ApiService();
+  ApiService apiService = ApiService();
 
   @override
   void initState() {
     super.initState();
-    getUser();
+    getAnggota();
   }
 
-  void getUser() async {
+  void getAnggota() async {
     final response = await apiService.request(
       endpoint: 'anggota',
       method: 'GET',
     );
 
-    // Setelah data berhasil diambil, data disimpan ke variabel users
     if (response != null) {
       setState(() {
         users = response.data['data']['anggotas'];
@@ -36,38 +35,25 @@ class _ListUserState extends State<ListUser> {
     }
   }
 
-  void editUser(Map<String, dynamic> user) {
+  void addTransaction(Map<String, dynamic> user) {
     Navigator.push(
       context,
       PageTransition(
-        child: EditUser(user: user),
+        child: AddTransaksi(user: user),
         type: PageTransitionType.fade,
       ),
     ).then((value) {
       if (value == true) {
-        getUser();
+        getAnggota();
       }
     });
-  }
-
-  void deleteUser(int id) async {
-    final response = await apiService.request(
-      endpoint: 'anggota/$id',
-      method: 'DELETE',
-    );
-
-    // Setelah data berhasil diambil, data disimpan ke variabel users
-    if (response != null) {
-      print(response.data);
-      getUser();
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('List User'),
+        title: const Text('List Transaksi User'),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -77,35 +63,29 @@ class _ListUserState extends State<ListUser> {
                 itemCount: users.length,
                 itemBuilder: (BuildContext context, int index) {
                   final user = users[index];
+
                   return Card(
                     child: ListTile(
                       title: Text(user['nama']),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 4),
-                          Text(user['alamat']),
-                          Text(user['id'].toString()),
-                        ],
-                      ),
+                      subtitle: Text(user['alamat']),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
                             onPressed: () {
-                              editUser(user);
+                              addTransaction(user);
                             },
                             icon: Icon(
-                              Icons.edit,
+                              Icons.add,
                               color: primary,
                             ),
                           ),
                           IconButton(
                             onPressed: () {
-                              deleteUser(user['id']);
+                              // deleteUser(user['id']);
                             },
                             icon: Icon(
-                              Icons.delete,
+                              Icons.money,
                               color: primary,
                             ),
                           )

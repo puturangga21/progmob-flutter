@@ -4,46 +4,53 @@ import 'package:page_transition/page_transition.dart';
 import 'package:penmas/api_service.dart';
 import 'package:penmas/components/button.dart';
 import 'package:penmas/components/textfield.dart';
-import 'package:penmas/pages/home_page.dart';
+import 'package:penmas/pages/list_transaksi.dart';
 import 'package:penmas/theme.dart';
 
-class AddUser extends StatefulWidget {
-  const AddUser({super.key});
+class AddTransaksi extends StatefulWidget {
+  final Map<String, dynamic> user;
+
+  const AddTransaksi({
+    super.key,
+    required this.user,
+  });
 
   @override
-  State<AddUser> createState() => _AddUserState();
+  State<AddTransaksi> createState() => _AddTransaksiState();
 }
 
-class _AddUserState extends State<AddUser> {
-  ApiService apiService = ApiService();
+class _AddTransaksiState extends State<AddTransaksi> {
+  final ApiService apiService = ApiService();
+  TextEditingController idAnggotaController = TextEditingController();
+  TextEditingController trxIdController = TextEditingController();
+  TextEditingController trxNominalController = TextEditingController();
 
-  TextEditingController noIndukController = TextEditingController();
-  TextEditingController namaController = TextEditingController();
-  TextEditingController alamatController = TextEditingController();
-  TextEditingController tglLahirController = TextEditingController();
-  TextEditingController teleponController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    idAnggotaController =
+        TextEditingController(text: widget.user['id'].toString());
+    trxIdController = TextEditingController(text: '1');
+  }
 
-  void addUser() async {
+  void addTransaction() async {
     final response = await apiService.request(
-      endpoint: 'anggota',
+      endpoint: 'tabungan',
       method: 'POST',
       data: {
-        'nomor_induk': noIndukController.text,
-        'nama': namaController.text,
-        'alamat': alamatController.text,
-        'tgl_lahir': tglLahirController.text,
-        'telepon': teleponController.text,
+        'anggota_id': idAnggotaController.text,
+        'trx_id': trxIdController.text,
+        'trx_nominal': trxNominalController.text,
       },
     );
 
     if (response != null) {
       print(response.data);
 
-      // Pindah halaman ke home jika berhasil register
       Navigator.push(
         context,
         PageTransition(
-          child: const HomePage(),
+          child: const ListTransaksi(),
           type: PageTransitionType.fade,
         ),
       );
@@ -66,7 +73,7 @@ class _AddUserState extends State<AddUser> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 48),
               child: Text(
-                'Silahkan menambah data user',
+                'Silahkan menambah data transaksi',
                 style: TextStyle(
                   fontSize: 30,
                   fontFamily: 'Poppins',
@@ -90,52 +97,36 @@ class _AddUserState extends State<AddUser> {
             Column(
               children: [
                 MyTextField(
-                  hintText: 'Nomor Induk',
-                  title: 'Nomor Induk',
+                  hintText: 'ID Anggota',
+                  title: 'ID Anggota',
                   myIcons: 'assets/icons/user.svg',
                   hideText: false,
-                  myController: noIndukController,
+                  myController: idAnggotaController,
                 ),
                 const SizedBox(height: 20),
                 MyTextField(
-                  hintText: 'Nama',
-                  title: 'Nama',
+                  hintText: 'TRX ID',
+                  title: 'TRX ID',
                   myIcons: 'assets/icons/user.svg',
                   hideText: false,
-                  myController: namaController,
+                  myController: trxIdController,
                 ),
                 const SizedBox(height: 20),
                 MyTextField(
-                  hintText: 'Alamat',
-                  title: 'Alamat',
+                  hintText: 'TRX Nominal',
+                  title: 'TRX Nominal',
                   myIcons: 'assets/icons/user.svg',
                   hideText: false,
-                  myController: alamatController,
-                ),
-                const SizedBox(height: 20),
-                MyTextField(
-                  hintText: 'Tanggal Lahir',
-                  title: 'Tanggal Lahir',
-                  myIcons: 'assets/icons/user.svg',
-                  hideText: false,
-                  myController: tglLahirController,
-                ),
-                const SizedBox(height: 20),
-                MyTextField(
-                  hintText: 'Telepon',
-                  title: 'Telepon',
-                  myIcons: 'assets/icons/user.svg',
-                  hideText: false,
-                  myController: teleponController,
+                  myController: trxNominalController,
                 ),
                 const SizedBox(height: 20),
 
                 // Button
                 MyButton(
-                    title: 'Tambah User',
+                    title: 'Tambah Transaksi',
                     color: Colors.green,
                     onPressButton: () {
-                      addUser();
+                      addTransaction();
                     })
               ],
             )

@@ -49,7 +49,7 @@ class _AddTransaksiState extends State<AddTransaksi> {
     if (response != null) {
       print(response.data);
 
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         PageTransition(
           child: SaldoUser(user: widget.user),
@@ -99,15 +99,6 @@ class _AddTransaksiState extends State<AddTransaksi> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                MyTextField(
-                  hintText: 'ID Anggota',
-                  title: 'ID Anggota',
-                  myIcons: 'assets/icons/user.svg',
-                  hideText: false,
-                  myController: idAnggotaController,
-                ),
-                const SizedBox(height: 20),
-
                 MyTextField(
                   hintText: 'TRX Nominal',
                   title: 'TRX Nominal',
@@ -169,6 +160,18 @@ class _AddTransaksiState extends State<AddTransaksi> {
                     DropdownMenuItem<int>(
                       value: 2,
                       child: Text('Tambah Saldo'),
+                    ),
+                    DropdownMenuItem<int>(
+                      value: 3,
+                      child: Text('Penarikan Saldo'),
+                    ),
+                    DropdownMenuItem<int>(
+                      value: 5,
+                      child: Text('Koreksi Penambahan'),
+                    ),
+                    DropdownMenuItem<int>(
+                      value: 6,
+                      child: Text('Koreksi Pengurangan'),
                     ),
                   ],
                   onChanged: (value) {

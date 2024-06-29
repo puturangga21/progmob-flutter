@@ -29,6 +29,8 @@ class _ListTransaksiState extends State<ListTransaksi> {
       method: 'GET',
     );
 
+    // print(response);
+
     if (response != null) {
       setState(() {
         users = response.data['data']['anggotas'];

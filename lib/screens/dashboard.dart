@@ -1,11 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:penmas/components/card_banner.dart';
 import 'package:penmas/pages/add_user.dart';
 import 'package:penmas/pages/list_user.dart';
-import 'package:penmas/pages/login.dart';
 import 'package:penmas/theme.dart';
 
 class MyDashboard extends StatefulWidget {
@@ -16,11 +14,7 @@ class MyDashboard extends StatefulWidget {
 }
 
 class _MyDashboardState extends State<MyDashboard> {
-  int index = 0;
-
-  final dio = Dio();
   final myStorage = GetStorage();
-  final apiUrl = 'https://mobileapis.manpits.xyz/api';
 
   String userName = '';
 
@@ -81,7 +75,7 @@ class _MyDashboardState extends State<MyDashboard> {
               title: 'Tambah User',
               image: 'assets/images/card2.png',
               onPressButton: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   PageTransition(
                     child: const AddUser(),
@@ -97,7 +91,7 @@ class _MyDashboardState extends State<MyDashboard> {
               title: 'Daftar User',
               image: 'assets/images/card3.png',
               onPressButton: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   PageTransition(
                     child: const ListUser(),
@@ -110,43 +104,5 @@ class _MyDashboardState extends State<MyDashboard> {
         ),
       ),
     );
-  }
-}
-
-void goUser(dio, myStorage, apiUrl) async {
-  try {
-    final response = await dio.get(
-      '$apiUrl/user',
-      options: Options(
-        headers: {'Authorization': 'Bearer ${myStorage.read('token')}'},
-      ),
-    );
-    print(response.data);
-  } on DioException catch (e) {
-    print('${e.response} - ${e.response?.statusCode}');
-  }
-}
-
-void goLogout(BuildContext context, dio, myStorage, apiUrl) async {
-  try {
-    final response = await dio.get(
-      '$apiUrl/logout',
-      options: Options(
-        headers: {'Authorization': 'Bearer ${myStorage.read('token')}'},
-      ),
-    );
-    print(response.data);
-
-    // Hapus token dari penyimpanan
-    myStorage.remove('token');
-    myStorage.remove('user');
-
-    // Balik ke halaman login
-    Navigator.push(
-      context,
-      PageTransition(child: const LoginPage(), type: PageTransitionType.fade),
-    );
-  } on DioException catch (e) {
-    print('${e.response} - ${e.response?.statusCode}');
   }
 }

@@ -42,7 +42,7 @@ class _MySettingState extends State<MySetting> {
       myStorage.remove('user');
 
       // Balik ke halaman login
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         PageTransition(child: const LoginPage(), type: PageTransitionType.fade),
       );

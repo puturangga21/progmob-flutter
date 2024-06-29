@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
     final token = myStorage.read('token');
     if (token != null) {
       // Jika pengguna sudah login, arahkan ke halaman login page
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         PageTransition(
           child: const HomePage(),

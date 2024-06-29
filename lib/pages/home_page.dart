@@ -16,9 +16,9 @@ class _HomePageState extends State<HomePage> {
   int index = 0;
 
   final screens = [
-    MyDashboard(),
-    MyTransaction(),
-    MySetting(),
+    const MyDashboard(),
+    const MyTransaction(),
+    const MySetting(),
   ];
 
   @override
